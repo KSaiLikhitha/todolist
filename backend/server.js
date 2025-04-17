@@ -46,6 +46,11 @@ app.delete('/api/todos/:id', (req, res) => {
   });
 });
 
+// Catch-all to serve frontend (React, plain HTML, etc.)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
