@@ -8,7 +8,7 @@ const app = express();
 const PORT = 3333;
 
 // Serve frontend static files
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Middleware
 app.use(bodyParser.json());
