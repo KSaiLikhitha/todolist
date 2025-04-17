@@ -13,14 +13,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Middleware
 app.use(bodyParser.json());
 
-const DB_FILE = path.join(__dirname, 'db', 'todos.db');
-
-// Make sure the directory exists
-const dbDir = path.dirname(DB_FILE);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
-
+const DB_FILE = path.join(__dirname, 'todos.db');
 const db = new sqlite3.Database(DB_FILE);
 
 db.serialize(() => {
