@@ -14,7 +14,7 @@ COPY frontend /app/frontend
 # Set correct permissions
 RUN mkdir -p /app/node_modules && chown -R 1001:0 /app
 
-RUN chmod 777 /app/backend/todos.db  # Ensure the todos.db file is writable by OpenShift user
+RUN chmod 777 backend/todos.db  # Ensure the todos.db file is writable by OpenShift user
 
 
 # Switch to non-root OpenShift-compatible user
