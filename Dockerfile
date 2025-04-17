@@ -4,19 +4,22 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Copy backend code
+# Copy backend files
 COPY backend/package.json backend/server.js /app/
 
-# Install backend dependencies
+# Install dependencies
 RUN npm install
 
-# Copy frontend code
+# Copy frontend
 COPY frontend /app/frontend
 
-# ✅ Copy the SQLite DB file to the expected location
-COPY backend/todos.db /app/todos.db
+# Create db directory and make it writable
+RUN mkdir -p /app/db && chmod 777 /app/db
 
-# Expose the backend port
+# Copy the SQLite DB file into the correct place
+COPY backend/todos.db /app/db/todos.db
+
+# Expose backend port
 EXPOSE 3333
 
 # Start the server
