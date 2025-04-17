@@ -4,6 +4,9 @@ FROM node:18
 # Set working directory inside container
 WORKDIR /app
 
+# Create db directory and make it writable
+RUN mkdir -p db && chmod 777 db
+
 # Copy backend files
 COPY backend/package.json backend/server.js /app/
 
