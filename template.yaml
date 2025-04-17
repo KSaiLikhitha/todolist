@@ -3,6 +3,7 @@ kind: Template
 metadata:
   name: todo-app-template
 objects:
+  # PersistentVolumeClaim (PVC) - This part remains unchanged
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
@@ -13,6 +14,8 @@ objects:
       resources:
         requests:
           storage: 1Gi
+
+  # Service - No change here either
   - apiVersion: v1
     kind: Service
     metadata:
@@ -24,6 +27,8 @@ objects:
         - protocol: TCP
           port: 80
           targetPort: 3333
+
+  # DeploymentConfig - Update this part to mount the PVC correctly
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
@@ -39,13 +44,15 @@ objects:
         spec:
           containers:
             - name: todo-container
-              image: todo-image
+              image: todo-image  # Replace with your actual image name
               ports:
                 - containerPort: 3333
               volumeMounts:
-                - mountPath: /app
+                # Mount PVC to the backend folder where todos.db is stored
+                - mountPath: /app/backend/todos.db
                   name: todo-storage
+                  subPath: todos.db  # Ensure the PVC mounts only the todos.db file
           volumes:
-            - name: todo
-::contentReference[oaicite:19]{index=19}
- 
+            - name: todo-storage
+              persistentVolumeClaim:
+                claimName: todo-pvc  # Reference to PVC for storage
