@@ -13,7 +13,8 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 // Middleware
 app.use(bodyParser.json());
 
-const DB_FILE = path.join(__dirname, 'todos.db');
+const DB_FILE = path.join('/app/backend', 'todos.db');  // New path after PVC mounting
+
 const db = new sqlite3.Database(DB_FILE);
 
 db.serialize(() => {
