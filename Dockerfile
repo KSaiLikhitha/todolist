@@ -8,9 +8,9 @@ USER root
 # Create the necessary directories for backend and frontend
 RUN mkdir -p /todolist/backend /todolist/frontend
 
-# Copy backend files (adjusted paths for OpenShift)
+# Copy backend files
 COPY backend/package.json backend/server.js /todolist/backend/
-COPY backend/todos.db /todolist/backend/todos.db
+COPY backend/todos.db /todolist/backend/todos.db  # This ensures todos.db is placed correctly
 
 # Copy frontend files
 COPY frontend /todolist/frontend
