@@ -8,12 +8,12 @@ USER root
 # Create the necessary directories for backend and frontend
 RUN mkdir -p /todolist/backend /todolist/frontend
 
-# Copy backend files
-COPY todolist/backend/package.json todolist/backend/server.js /todolist/backend/
-COPY todolist/backend/todos.db /todolist/backend/todos.db
+# Copy backend files (adjusted paths for OpenShift)
+COPY backend/package.json backend/server.js /todolist/backend/
+COPY backend/todos.db /todolist/backend/todos.db
 
 # Copy frontend files
-COPY todolist/frontend /todolist/frontend
+COPY frontend /todolist/frontend
 
 # Set correct permissions
 RUN mkdir -p /todolist/node_modules && chown -R 1001:0 /todolist
