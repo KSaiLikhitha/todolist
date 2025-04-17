@@ -4,9 +4,6 @@ FROM node:18
 # Set working directory inside container
 WORKDIR /app
 
-# Create db directory and make it writable
-RUN mkdir -p db && chmod 777 db
-
 # Copy backend files
 COPY backend/package.json backend/server.js /app/
 
@@ -21,6 +18,9 @@ COPY frontend /app/frontend
 
 # Expose the backend port
 EXPOSE 3333
+
+# Create db directory and make it writable
+RUN mkdir -p db && chmod 777 db
 
 # Start the Node.js server
 CMD ["npm", "start"]
