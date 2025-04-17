@@ -1,5 +1,5 @@
 # Base image
-FROM node:18
+FROM registry.access.redhat.com/ubi8/nodejs-18
 
 # Set working directory
 WORKDIR /app
