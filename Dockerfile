@@ -2,17 +2,20 @@ FROM registry.access.redhat.com/ubi8/nodejs-18
 
 WORKDIR /app
 
-# Ensure we have correct permissions
+# Use root to set permissions
 USER root
-COPY backend/package.json backend/server.js /app/
+
+# Copy backend source files
+COPY backend/package.json backend/server.js backend/todos.db /app/
+
+# Set correct permissions
 RUN mkdir -p /app/node_modules && chown -R 1001:0 /app
 
-# Set back to default UBI user (non-root user 1001)
+# Switch to non-root OpenShift-compatible user
 USER 1001
 
+# Install dependencies
 RUN npm install
-
-COPY backend /app
 
 EXPOSE 3333
 CMD ["node", "server.js"]
