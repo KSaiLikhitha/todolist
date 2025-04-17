@@ -1,26 +1,18 @@
-# Base image
 FROM registry.access.redhat.com/ubi8/nodejs-18
 
-# Set working directory
 WORKDIR /app
 
-# Copy backend files
+# Ensure we have correct permissions
+USER root
 COPY backend/package.json backend/server.js /app/
+RUN mkdir -p /app/node_modules && chown -R 1001:0 /app
 
-# Install dependencies
+# Set back to default UBI user (non-root user 1001)
+USER 1001
+
 RUN npm install
 
-# Copy frontend
-COPY frontend /app/frontend
+COPY backend /app
 
-# Create db directory and make it writable
-RUN mkdir -p /app/db && chmod 777 /app/db
-
-# Copy the SQLite DB file into the correct place
-COPY backend/todos.db /app/db/todos.db
-
-# Expose backend port
-EXPOSE 3333
-
-# Start the server
-CMD ["npm", "start"]
+EXPOSE 9999
+CMD ["node", "server.js"]
