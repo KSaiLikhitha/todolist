@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: todo-app-template
+objects:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: todo-pvc
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: todo-service
+    spec:
+      selector:
+        app: todo-app
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 3333
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      name: todo-deployment
+    spec:
+      replicas: 1
+      selector:
+        app: todo-app
+      template:
+        metadata:
+          labels:
+            app: todo-app
+        spec:
+          containers:
+            - name: todo-container
+              image: todo-image
+              ports:
+                - containerPort: 3333
+              volumeMounts:
+                - mountPath: /app
+                  name: todo-storage
+          volumes:
+            - name: todo
+::contentReference[oaicite:19]{index=19}
+ 
