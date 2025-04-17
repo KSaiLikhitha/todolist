@@ -15,6 +15,10 @@ app.use(bodyParser.json());
 
 const DB_FILE = path.join(__dirname, 'backend', 'todos.db');
 
+// Ensure the todos.db file exists (important for OpenShift PVC)
+if (!fs.existsSync(DB_FILE)) {
+  fs.writeFileSync(DB_FILE, '');
+}
 
 const db = new sqlite3.Database(DB_FILE);
 
