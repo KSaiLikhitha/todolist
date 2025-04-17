@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 
 const app = express();
-const PORT = 9999;
+const PORT = 3333;
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '../frontend')));
