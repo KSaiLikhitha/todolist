@@ -14,5 +14,5 @@ RUN npm install
 
 COPY backend /app
 
-EXPOSE 9999
+EXPOSE 3333
 CMD ["node", "server.js"]
