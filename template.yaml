@@ -3,19 +3,19 @@ kind: Template
 metadata:
   name: todo-app-template
 objects:
-  # PersistentVolumeClaim (PVC) - This part remains unchanged
+  # PersistentVolumeClaim (PVC) - Set accessModes to ReadWriteOnce
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
       name: todo-pvc
     spec:
       accessModes:
-        - ReadWriteOnce
+        - ReadWriteOnce  # Ensure read-write access
       resources:
         requests:
           storage: 1Gi
 
-  # Service - No change here either
+  # Service
   - apiVersion: v1
     kind: Service
     metadata:
@@ -28,7 +28,7 @@ objects:
           port: 80
           targetPort: 3333
 
-  # DeploymentConfig - Update this part to mount the PVC correctly
+  # DeploymentConfig
   - apiVersion: apps.openshift.io/v1
     kind: DeploymentConfig
     metadata:
@@ -51,7 +51,7 @@ objects:
                 # Mount PVC to the backend folder where todos.db is stored
                 - mountPath: /app/backend/todos.db
                   name: todo-storage
-                  subPath: todos.db  # Ensure the PVC mounts only the todos.db file
+                  subPath: todos.db  # Mount only the todos.db file
           volumes:
             - name: todo-storage
               persistentVolumeClaim:
