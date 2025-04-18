@@ -47,12 +47,12 @@ objects:
               image: todo-image  # Replace with your actual image name
               ports:
                 - containerPort: 3333
-              volumeMounts:
+              #volumeMounts:
                 # Mount PVC to the backend folder where todos.db is stored
-                - mountPath: /app/backend/todos.db
-                  name: todo-storage
-                  subPath: todos.db  # Ensure the PVC mounts only the todos.db file
-          volumes:
-            - name: todo-storage
-              persistentVolumeClaim:
-                claimName: todo-pvc  # Reference to PVC for storage
+                #- mountPath: /app/backend/todos.db
+                 # name: todo-storage
+                  #subPath: todos.db  # Ensure the PVC mounts only the todos.db file
+          #volumes:
+           # - name: todo-storage
+            #  persistentVolumeClaim:
+             #   claimName: todo-pvc  # Reference to PVC for storage
