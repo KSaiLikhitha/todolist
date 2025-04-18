@@ -6,7 +6,7 @@ WORKDIR /app
 USER root
 
 # Copy backend files
-COPY backend/package.json backend/server.js backend/todos.db /app/backend/
+COPY backend/package.json backend/server.js /app/backend/
 
 # Copy frontend files into backend/frontend
 COPY frontend /app/backend/frontend/
