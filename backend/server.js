@@ -13,7 +13,8 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
-const DB_FILE = path.join(__dirname, 'todos.db');
+const DB_FILE = process.env.DB_PATH || path.join(__dirname, 'todos.db');
+
 
 // Ensure the todos.db file exists (important for OpenShift PVC)
 if (!fs.existsSync(DB_FILE)) {
