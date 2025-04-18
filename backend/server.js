@@ -10,7 +10,7 @@ const PORT = 3333;
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-// Middleware
+// Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
 const DB_FILE = path.join(__dirname, 'todos.db');
@@ -21,9 +21,12 @@ if (!fs.existsSync(DB_FILE)) {
   fs.writeFileSync(DB_FILE, '');
 }
 
+// Check if database is empty, and initialize the database if necessary
 const stats = fs.statSync(DB_FILE);
 if (stats.size === 0) {
   console.log("Initializing new database...");
+  const db = new sqlite3.Database(DB_FILE);
+
   db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT)", (err) => {
       if (err) {
@@ -33,37 +36,50 @@ if (stats.size === 0) {
       }
     });
   });
+
+  db.close();
 }
 
-
+// Initialize database connection
 const db = new sqlite3.Database(DB_FILE);
-
-db.serialize(() => {
-  db.run("CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT)");
-});
 
 // API: Get all todos
 app.get('/api/todos', (req, res) => {
   db.all("SELECT * FROM todos", (err, rows) => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error("Error fetching todos:", err);
+      return res.status(500).send(err);
+    }
     res.json(rows);
   });
 });
 
-// API: Add todo
+// API: Add a new todo
 app.post('/api/todos', (req, res) => {
   const task = req.body.task;
+  console.log("Received new todo:", task); // Log the incoming task
+
   db.run("INSERT INTO todos (task) VALUES (?)", [task], function(err) {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error("Error inserting todo:", err); // Log any error that occurs during the database insert
+      return res.status(500).send(err);
+    }
+    console.log("Inserted todo with ID:", this.lastID); // Log the inserted task's ID
     res.json({ id: this.lastID, task });
   });
 });
 
-// API: Delete todo
+// API: Delete a todo
 app.delete('/api/todos/:id', (req, res) => {
   const id = req.params.id;
+  console.log("Deleting todo with ID:", id);
+
   db.run("DELETE FROM todos WHERE id = ?", [id], function(err) {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error("Error deleting todo:", err);
+      return res.status(500).send(err);
+    }
+    console.log("Deleted todo with ID:", id);
     res.sendStatus(200);
   });
 });
@@ -73,7 +89,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
-// Start server
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
