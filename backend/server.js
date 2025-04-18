@@ -17,8 +17,24 @@ const DB_FILE = path.join(__dirname, 'todos.db');
 
 // Ensure the todos.db file exists (important for OpenShift PVC)
 if (!fs.existsSync(DB_FILE)) {
+  console.log("Database file not found — creating new one.");
   fs.writeFileSync(DB_FILE, '');
 }
+
+const stats = fs.statSync(DB_FILE);
+if (stats.size === 0) {
+  console.log("Initializing new database...");
+  db.serialize(() => {
+    db.run("CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT)", (err) => {
+      if (err) {
+        console.error("Failed to create todos table:", err);
+      } else {
+        console.log("Todos table created successfully.");
+      }
+    });
+  });
+}
+
 
 const db = new sqlite3.Database(DB_FILE);
 
