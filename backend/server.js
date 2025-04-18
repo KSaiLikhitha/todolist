@@ -13,14 +13,23 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
-const DB_FILE = path.join(__dirname, 'data', 'todos.db'); // <-- Use mounted volume
+const DB_DIR = path.join(__dirname, 'data');
+const DB_FILE = path.join(DB_DIR, 'todos.db');
 
+// Ensure the data directory exists
+if (!fs.existsSync(DB_DIR)) {
+  fs.mkdirSync(DB_DIR, { recursive: true });
+}
 
 // Ensure the todos.db file exists (important for OpenShift PVC)
 if (!fs.existsSync(DB_FILE)) {
   console.log("Database file not found — creating new one.");
   fs.writeFileSync(DB_FILE, '');
 }
+
+
+
+
 
 // Check if database is empty, and initialize the database if necessary
 const stats = fs.statSync(DB_FILE);
