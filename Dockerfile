@@ -11,8 +11,9 @@ COPY backend/package.json backend/server.js backend/todos.db /app/backend/
 # Copy frontend files into backend/frontend
 COPY frontend /app/backend/frontend/
 
-# Set correct permissions
-RUN mkdir -p /app/backend/node_modules && chown -R 1001:0 /app
+# Set correct permissions for backend and database files
+RUN chown -R 1001:0 /app/backend
+RUN chmod 666 /app/backend/todos.db
 
 # Switch to non-root OpenShift-compatible user
 USER 1001
