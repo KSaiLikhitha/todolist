@@ -2,19 +2,17 @@ FROM registry.access.redhat.com/ubi8/nodejs-18
 
 WORKDIR /app
 
-# Use root to set permissions
 USER root
 
-# Copy backend code
-COPY backend/package.json backend/server.js /app/backend/
+# Copy backend and frontend
+COPY backend /app/backend
+COPY frontend /app/backend/frontend
 
-# Copy frontend code
-COPY frontend /app/backend/frontend/
+# Create the data directory and set permissions
+RUN mkdir -p /app/backend/data && \
+    chown -R 1001:0 /app && \
+    chmod -R ug+rwx /app
 
-# Set permissions
-RUN chown -R 1001:0 /app
-
-# Switch to non-root user for OpenShift
 USER 1001
 
 WORKDIR /app/backend
@@ -24,4 +22,3 @@ RUN npm install
 EXPOSE 3333
 
 CMD ["node", "server.js"]
-
